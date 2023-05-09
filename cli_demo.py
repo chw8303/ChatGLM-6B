@@ -3,9 +3,11 @@ import platform
 import signal
 from transformers import AutoTokenizer, AutoModel
 import readline
+from utils import load_model_on_gpus
 
 tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
-model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().cuda()
+# model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().cuda()
+model = load_model_on_gpus("THUDM/chatglm-6b", num_gpus=2)
 model = model.eval()
 
 os_name = platform.system()
