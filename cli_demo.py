@@ -1,13 +1,20 @@
 import os
 import platform
 import signal
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel,AutoModelForSeq2SeqLM
 import readline
 from utils import load_model_on_gpus
+import torch
 
+torch.cuda.empty_cache()
+device = torch.device("cuda:0") 
 tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
+model = None
+# tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True)
 # model = AutoModel.from_pretrained("THUDM/chatglm-6b", trust_remote_code=True).half().cuda()
-model = load_model_on_gpus("THUDM/chatglm-6b", num_gpus=2)
+# model = load_model_on_gpus("THUDM/chatglm-6b", num_gpus=2)
+max_memory_mapping = {0: "12GB", 1: "12GB"} 
+model = AutoModelForSeq2SeqLM.from_pretrained(modelPath, trust_remote_code=True,device_map='auto', max_memory=max_memory_mapping).half()
 model = model.eval()
 
 os_name = platform.system()
